@@ -19,7 +19,7 @@ CompositeGraphics graphics(XRES, YRES);
 //It will center the displayed image automatically
 CompositeOutput composite(CompositeOutput::NTSC, XRES * 2, YRES * 2);
 
-//image and font from the included headers created by the converter. Each iamge uses its own namespace.
+//image and font from the included headers created by the converter. Each image uses its own namespace.
 Image<CompositeGraphics> luni0(luni::xres, luni::yres, luni::pixels);
 
 //font is based on ASCII starting from char 32 (space), width end height of the monospace characters. 

@@ -57,8 +57,17 @@ void hexdump(const void *mem, uint32_t len, uint8_t cols = 16) {
   Serial.printf("\n");
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+String ui8tostr(uint8_t *str){
+    return String((char *)str);
+}
 
+String addrup = "0";
+String addrdown = "1";
+String MSB = "2";
+String LSB = "3";
+String graphon = "4";
+String graphoff = "5";
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
   switch (type) {
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
@@ -69,18 +78,39 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
 
         // send message to client
-        webSocket.sendTXT(num, "Connected");
+        webSocket.sendTXT(num, "Connected     ");
       }
       break;
     case WStype_TEXT:
       Serial.printf("[%u] get Text: %s\n", num, payload);
-
-      for (int i = 0; i < 10; i++)
+      Serial.println("payload: " + ui8tostr(payload));
+      if (ui8tostr(payload) == addrup)
       {
-        // send message to client
-        webSocket.sendTXT(num, "message here");
+        webSocket.sendTXT(num, "addrup");
       }
-      
+      else if (ui8tostr(payload) == addrdown)
+      {
+        webSocket.sendTXT(num, "addrdown");
+      }
+      else if (ui8tostr(payload) == MSB)
+      {
+        webSocket.sendTXT(num, "MSB");
+      }
+      else if (ui8tostr(payload) == LSB)
+      {
+        webSocket.sendTXT(num, "LSB");
+      }
+      else if (ui8tostr(payload) == graphon)
+      {
+        webSocket.sendTXT(num, "graphon");
+      }
+      else if (ui8tostr(payload) == graphoff)
+      {
+        webSocket.sendTXT(num, "graphoff");
+      }
+
+      // send message to client
+      //webSocket.sendTXT(num, "message here");
 
       // send data to all connected clients
       // webSocket.broadcastTXT("message here");

@@ -22,3 +22,22 @@ CC0. Do whatever you like with the code but I will be thankfull
 if you attribute me. Keep the spirit alive :-)
 
 - bitluni
+
+
+# ReadME
+
+need ws commands to....
+
+change modes: single value/normal display
+In single value mode the value address needs to be able to be changed.
+ - simple up and down seeking
+ - value MSB LSB switching
+ - graph on/off
+
+examples:
+ - addup
+ - adddown
+ - MSB
+ - LSB
+ - graphon
+ - graphoff

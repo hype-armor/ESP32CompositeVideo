@@ -18,7 +18,7 @@ function Open-Connection {
 function Read-WS {
     #Start reading the received items
     While ($WS.State -eq 'Open') {                        
-
+        $Array = [byte[]] @(, 0) * $Size
         $Recv = New-Object System.ArraySegment[byte] -ArgumentList @(, $Array)
         $Conn = $WS.ReceiveAsync($Recv, $CT)
         While (!$Conn.IsCompleted) { 
@@ -37,7 +37,7 @@ function Send-WS {
         $cmd
     )
     $Size = 1024
-    $Array = [byte[]] @(, 0) * $Size
+    
 
     #Send Starting Request
     $Command = [System.Text.Encoding]::UTF8.GetBytes($cmd)

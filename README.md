@@ -41,3 +41,5 @@ examples:
  - LSB
  - graphon
  - graphoff
+
+need webpage to send commands and view data from websocket.

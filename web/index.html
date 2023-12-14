@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>
+        FRS ESP
+    </title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="gauge.min.js" type="text/javascript"></script>
+    <script src="main.js" type="text/javascript"></script>
+</head>
+
+<body style="background-color: #444444">
+    <svg height="210" width="500">
+        <polygon id="polygon" points="200,10 250,190 160,210" style="fill:rgb(0, 38, 255);stroke:purple;stroke-width:1" />
+        Sorry, your browser does not support inline SVG.
+    </svg>
+    <div id="display">
+        <div id="value-text">0</div>
+        <canvas id="bar"></canvas>
+    </div>
+    <br />
+    <button class="controls" type="button" onclick="socket.send(0)">Address UP</button>
+    <button class="controls" type="button" onclick="socket.send(1)">Address DOWN</button>
+    <button class="controls" type="button" onclick="socket.send(2)">MSB</button>
+    <button class="controls" type="button" onclick="socket.send(3)">LSB</button>
+    <button class="controls" type="button" onclick="socket.send(4)">Graph ON</button>
+    <button class="controls" type="button" onclick="socket.send(5)">Graph OFF</button>
+</body>
+
+</html>

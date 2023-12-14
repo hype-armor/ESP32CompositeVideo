@@ -19,7 +19,12 @@ var opts = { // https://bernii.github.io/gauge.js/
 window.onload = init;
 var gauge
 var textValue
-var polygon
+var xVal = 0;
+var yVal = 100; 
+var updateInterval = 20;
+var dataLength = 200; // number of dataPoints visible at any point
+var dps = []; // dataPoints
+var chart = null;
 function init() {
     var target = document.getElementById('bar'); // your canvas element
     polygon = document.getElementById('polygon');
@@ -29,7 +34,41 @@ function init() {
     gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
     gauge.animationSpeed = 5; // set animation speed (32 is default value)
     gauge.set(5); // set actual value
+
+    
+    chart = new CanvasJS.Chart("chartContainer", {
+
+      theme: "dark1",
+      data: [{
+        type: "line",
+        dataPoints: dps
+      }]
+    });
+    updateChart(dataLength);
+    setInterval(function(){updateChart()}, updateInterval);
 }
+
+var updateChart = function (count) {
+
+	count = count || 1;
+
+	for (var j = 0; j < count; j++) {
+		yVal = parseInt(lastValue);
+		dps.push({
+			x: xVal,
+			y: yVal
+		});
+		xVal++;
+	}
+
+	if (dps.length > dataLength) {
+		dps.shift();
+	}
+
+	chart.render();
+};
+
+
 
 //const intervalID = setInterval(myCallback, 100);
 
@@ -46,52 +85,7 @@ function myCallback() {
   }
 }
 
-const intervalID = setInterval(polygonupdate, 20);
 
-// x,y
-var maxHeight = 300
-var historyLength = 500
-var floor = 200
-var start = ['0,' + floor + " "]
-var end = [historyLength + ',' + floor + " "]
-var array1 = [];
-for (let i = 0; i < historyLength -2; i++) {
-  array1.push(floor)
-} 
-
-function getminmax(array) {
-  var min = Math.min.apply(null, arr);
-  var max = Math.max.apply(null, arr);
-  return min, max
-}
-
-function scaleArray(array) {
-  var diff = maxHeight - max;
-  
-}
-
-function polygonupdate() {
-    var value = lastValue
-    //Ymax + (Ymax – Ymin)/20
-    var nv = lastValue
-    value = floor - parseInt(nv)
-    if (array1.length > historyLength) {
-        array1.shift()
-    }
-
-    array1.push(value)
-
-    var str = start
-    
-    for (let i = 0; i < array1.length; i++) {
-      // scale the values
-        str = str + i + "," + array1[i] + " "
-    } 
-
-    str = str + end
-    //console.log(str)
-    polygon.setAttribute("points", str);
-}
 
 // Create WebSocket connection.
 const socket = new WebSocket("ws://esp32.local:81");
@@ -123,3 +117,5 @@ socket.addEventListener("message", (event) => {
   }
   
 });
+
+

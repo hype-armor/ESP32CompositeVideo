@@ -27,7 +27,7 @@ function init() {
     gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
     gauge.maxValue = 5; // set max gauge value
     gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 32; // set animation speed (32 is default value)
+    gauge.animationSpeed = 5; // set animation speed (32 is default value)
     gauge.set(5); // set actual value
 }
 
@@ -46,24 +46,51 @@ function myCallback() {
   }
 }
 
-const intervalID = setInterval(polygonupdate, 100);
+const intervalID = setInterval(polygonupdate, 20);
 
 // x,y
-var array1 = ['0,-100', '100,-100', '100,-100', '50,70', '40,50', '0,-100'];
+var maxHeight = 300
+var historyLength = 500
+var floor = 200
+var start = ['0,' + floor + " "]
+var end = [historyLength + ',' + floor + " "]
+var array1 = [];
+for (let i = 0; i < historyLength -2; i++) {
+  array1.push(floor)
+} 
+
+function getminmax(array) {
+  var min = Math.min.apply(null, arr);
+  var max = Math.max.apply(null, arr);
+  return min, max
+}
+
+function scaleArray(array) {
+  var diff = maxHeight - max;
+  
+}
+
 function polygonupdate() {
-    if (array1.length > 99) {
-    //    array1.shift()
+    var value = lastValue
+    //Ymax + (Ymax – Ymin)/20
+    var nv = lastValue
+    value = floor - parseInt(nv)
+    if (array1.length > historyLength) {
+        array1.shift()
     }
-    //array1.push(lastValue * 100)
-    var str = ""
-    for (let i = array1.length; i < array1.length + 99; i++) {
-        str = str + i + "," + 0 + " "
-    } 
-    for (let i = 0; i < array1.length; i++) {
-        str = str + i + "," + lastValue * 100 + " "
-    } 
+
+    array1.push(value)
+
+    var str = start
     
-    polygon.setAttribute("points", array1);
+    for (let i = 0; i < array1.length; i++) {
+      // scale the values
+        str = str + i + "," + array1[i] + " "
+    } 
+
+    str = str + end
+    //console.log(str)
+    polygon.setAttribute("points", str);
 }
 
 // Create WebSocket connection.
@@ -71,7 +98,7 @@ const socket = new WebSocket("ws://esp32.local:81");
 
 // Connection opened
 socket.addEventListener("open", (event) => {
-  socket.send("0");
+  socket.send("5");
 });
 
 var dict = {
@@ -88,7 +115,11 @@ var lastValue = 0
 socket.addEventListener("message", (event) => {
   console.log("Message from server ", event.data);
   var value = dict[event.data]
-  gauge.set(value); // set actual value
-  textValue.innerHTML = value
-  lastValue = value
+  
+  if (value % 1 == 0) {
+    gauge.set(value); // set actual value
+    textValue.innerHTML = value
+    lastValue = value
+  }
+  
 });
